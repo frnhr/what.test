@@ -32,4 +32,4 @@ RUN python manage_prodselect.py collectstatic --noinput
 EXPOSE 80
 
 # Define the command to run your application
-CMD ["gunicorn", "prodselect.wsgi:application", "--bind", "0.0.0.0:80"]
+CMD ["gunicorn", "application", "--bind", "0.0.0.0:80"]
