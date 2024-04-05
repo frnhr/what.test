@@ -11,25 +11,25 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y postgresql-client libpq-dev postgresql-contrib
 
-# Copy only the requirements.in and .env.local files into the container
-COPY requirements.in /app/
-
-# Install pip-tools
+# Install poetry
 RUN pip install --upgrade pip && \
-    pip install pip-tools
+    pip install poetry
 
-# Compile requirements.in to requirements.txt and install pip requirements
-RUN pip-compile requirements.in && \
-    pip install --no-cache-dir -r requirements.txt
+# Copy only the requirements files into the container
+COPY pyproject.toml poetry.lock /app/
+
+# install requirements
+RUN poetry config virtualenvs.create false && \
+    poetry install --no-root
 
 # Copy the rest of the project files into the container
-COPY . /app/
+COPY app /app/
 
 # Run collectstatic to gather static files
-RUN python manage.py collectstatic --noinput
+RUN python manage_prodselect.py collectstatic --noinput
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
 # Define the command to run your application
-CMD ["gunicorn", "mysite.wsgi:application", "--bind", "0.0.0.0:80"]
+CMD ["gunicorn", "prodselect.wsgi:application", "--bind", "0.0.0.0:80"]

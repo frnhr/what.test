@@ -2,11 +2,21 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from pathlib import Path
 
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
+
+    # support running from the repo root as well as from the app directory (in container):
+    try:
+        import prodselect
+    except ImportError:
+        current_path = Path(__file__).resolve().parent
+        sys.path.insert(0, str(current_path))
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'prodselect.settings')
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
