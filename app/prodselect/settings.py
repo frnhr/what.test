@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'prodselect.apps.api',
 
     'rest_framework',
+    'django_filters',
 ]
 
 AUTH_USER_MODEL = 'users.User'
