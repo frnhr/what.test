@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -11,6 +13,7 @@ class UserSelectionProxy(user_model):
 
 
 class Selection(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, null=False)
     user = models.ForeignKey(UserSelectionProxy, on_delete=models.CASCADE, related_name="selections", null=False, blank=False)
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="selections", null=False, blank=False)
 
