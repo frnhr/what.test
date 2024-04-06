@@ -38,7 +38,7 @@ prodselect_app = load_prodselect_app()
 # outermost to innermost:
 wsgi_middlewares = [
     # (ProxyFix, (), {"x_proto": 1, "x_host": 1}),
-    (DispatcherMiddleware, (), {"mounts": {"/api": prodselect_app}}),
+    (DispatcherMiddleware, (), {"mounts": {"/backend": prodselect_app}}),
 ]
 for app, args, kwargs in wsgi_middlewares[::-1]:
     application = app(application, *args, **kwargs)
