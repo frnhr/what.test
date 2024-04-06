@@ -17,5 +17,8 @@ class Selection(models.Model):
     user = models.ForeignKey(UserSelectionProxy, on_delete=models.CASCADE, related_name="selections", null=False, blank=False)
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="selections", null=False, blank=False)
 
+    class Meta:
+        unique_together = ["user", "product"]
+
     def __str__(self) -> str:
         return f"{self.user} - {self.product}"

@@ -10,7 +10,7 @@ from prodselect.apps.selection.models import Selection
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint for listing or retrieving products.
+    API endpoint for listing and retrieving Product objects.
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -28,10 +28,10 @@ class UserSelectionSerializerViewSet(
         GenericViewSet,
 ):
     """
-    API endpoint for CRUD operations on selection objects for the current user.
+    API endpoint for CRUD operations on Selection objects for the current user.
 
-    Same as ModelViewSet but without update functionality - we only want to add or remove
-    selection objects.
+    Mixins: same as ModelViewSet but without update functionality - we only want to add or remove
+    Selection objects.
     """
     queryset = Selection.objects.all()
     serializer_class = UserSelectionSerializer
@@ -44,4 +44,5 @@ class UserSelectionSerializerViewSet(
             return self.serializer_class
 
     def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
+        qs = super().get_queryset()
+        return qs.filter(user=self.request.user)
