@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'prodselect.apps.products',
     'prodselect.apps.users',
+    'prodselect.apps.selection',
     'prodselect.apps.api',
 
     'rest_framework',
