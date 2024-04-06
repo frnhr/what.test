@@ -22,6 +22,7 @@ from django.views import debug
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('prodselect.apps.crazy_registration.urls')),
     path('auth/', include('rest_framework.urls')),
     path('api/', include('prodselect.apps.api.urls')),
 ]

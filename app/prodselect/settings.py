@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'prodselect.apps.users',
     'prodselect.apps.selection',
     'prodselect.apps.api',
+    'prodselect.apps.crazy_registration',  # CRAZY!
 
     'rest_framework',
     'django_filters',
@@ -146,6 +147,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+LOGIN_REDIRECT_URL = "api-root"
 
 # Default storage settings, with the staticfiles storage updated.
 # See https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-STORAGES
