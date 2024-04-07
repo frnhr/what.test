@@ -21,6 +21,7 @@ wsgitypes = "^0.0.4"
 dash-bootstrap-components = "^1.5.0"
 pydantic-settings = "^2.2.1"
 dash-extensions = "^1.0.14"
+dash-ag-grid = "^31.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
