@@ -1,6 +1,6 @@
 import dash
 import dash_ag_grid as dag
-from dash import Input, Output, State, html
+from dash import Input, Output, State, dcc, html
 
 from ui.pages._common_layout import common_layout
 
@@ -8,20 +8,17 @@ _PATH = "/"
 
 
 column_defs = [
-    # this row shows the row index, doesn't use any data from the row
-    # {
-    #     "headerName": "ID",
-    #     "maxWidth": 100,
-    #     # it is important to have node.id here, so that when the id changes
-    #     # (which happens when the row is loaded) then the cell is refreshed.
-    #     "valueGetter": {"function": "params.node.id"},
-    #     # "cellRenderer": "SpinnerCellRenderer",
-    # },
     {"field": "id", "minWidth": 150, "cellRenderer": "SpinnerCellRenderer"},
     {"field": "name", "minWidth": 150},
+    {"field": "price", "maxWidth": 120},
+    {"field": "stock", "maxWidth": 120},
     {"field": "description", "minWidth": 150},
-    {"field": "price"},
-    {"field": "stock", "minWidth": 150},
+    {
+        "field": "select",
+        "cellRenderer": "DBC_Button_Simple",
+        "cellRendererParams": {"color": "secondary"},
+        "valueGetter": {"function": "'Select'"},
+    },
 ]
 
 default_col_def = {
@@ -37,16 +34,13 @@ ag_grid = dag.AgGrid(
     defaultColDef=default_col_def,
     rowModelType="infinite",
     dashGridOptions={
-        # The number of rows rendered outside the viewable area the grid renders
-        "rowBuffer": 0,
-        # How many blocks to keep in the store. Default is no limit, so every
-        # requested block is kept.
+        "rowBuffer": 20,
         "maxBlocksInCache": 5,
         "cacheBlockSize": 500,
         "cacheOverflowSize": 2,
         "maxConcurrentDatasourceRequests": 2,
         "infiniteInitialRowCount": 1,
-        "rowSelection": "multiple",
+        "rowSelection": "single",
         "pagination": True,
     },
 )
@@ -55,7 +49,9 @@ ag_grid = dag.AgGrid(
 layout = common_layout(
     html.H1("This is our Home page"),
     html.Div("This is our Home page content."),
+    dcc.Store(id="selected_product_store", data=[]),
     ag_grid,
+    cols=12,
 )
 
 
@@ -86,4 +82,18 @@ def register(app: dash.Dash) -> None:
 
             return { rowData: response.results, rowCount: response.count };
         }
+        """
+
+    @app.clientside(
+        Output("selected_product_store", "data"),
+        Input("product_grid", "cellRendererData"),
+        State("selected_product_store", "data"),
+    )
+    def show_change() -> str:
+        return """
+            (data, store) => {
+                console.warn(data);
+                store.push(data);
+                return store;
+            };
         """
