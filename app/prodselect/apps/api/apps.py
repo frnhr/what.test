@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class APIConfig(AppConfig):
-    name = 'prodselect.apps.api'
+    name = "prodselect.apps.api"

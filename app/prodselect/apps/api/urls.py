@@ -4,9 +4,9 @@ from rest_framework import routers
 from prodselect.apps.api import views
 
 router = routers.DefaultRouter()
-router.register(r'products', views.ProductViewSet)
-router.register(r'selection', views.UserSelectionSerializerViewSet)
+router.register(r"products", views.ProductViewSet)
+router.register(r"selection", views.UserSelectionSerializerViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class SelectionConfig(AppConfig):
-    name = 'prodselect.apps.selection'
+    name = "prodselect.apps.selection"

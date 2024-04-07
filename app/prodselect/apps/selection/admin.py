@@ -1,28 +1,31 @@
-from django.contrib import admin
-from django.db.models import Count
+from typing import ClassVar
 
-from prodselect.apps.selection.models import UserSelectionProxy, Selection
+from django.contrib import admin
+from django.db.models import Count, QuerySet
+from django.http import HttpRequest
+
+from prodselect.apps.selection.models import Selection, UserSelectionProxy
 
 
 class SelectionInline(admin.TabularInline):
     model = Selection
     extra = 0
-    fields = ["product"]
-    autocomplete_fields = ["product"]
+    fields: ClassVar = ["product"]
+    autocomplete_fields: ClassVar = ["product"]
 
 
 @admin.register(UserSelectionProxy)
 class UserSelectionProxyAdmin(admin.ModelAdmin):
-    list_display = ["email", "selection_count"]
-    search_fields = ["email"]
+    list_display: ClassVar = ["email", "selection_count"]
+    search_fields: ClassVar = ["email"]
 
-    fields = ["email"]
-    inlines = [SelectionInline]
+    fields: ClassVar = ["email"]
+    inlines: ClassVar = [SelectionInline]
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: HttpRequest) -> QuerySet:
         qs = super().get_queryset(request)
         return qs.annotate(selection_count=Count("selections"))
 
     @admin.display(description="selections", ordering="selection_count")
-    def selection_count(self, obj):
+    def selection_count(self, obj: Selection) -> int:
         return obj.selection_count

@@ -17,8 +17,63 @@ dash = "^2.16.1"
 faker = "^24.7.1"
 djangorestframework = "^3.15.1"
 django-filter = "^24.2"
+wsgitypes = "^0.0.4"
 
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+float_to_top = true
+include_trailing_comma = true
+line_length = 80
+lines_after_imports = 2
+lines_between_sections = 1
+profile = "black"
+py_version = 311
+
+[tool.black]
+line-length = 80
+target-version = ['py311']
+
+
+[tool.ruff]
+line-length = 80
+target-version = "py311"
+# https://beta.ruff.rs/docs/rules
+lint.select = ["ALL"]
+lint.ignore = [
+    "ANN002",  # Missing type annotation for *{name}
+    "ANN003",  # Missing type annotation for **{name}
+    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed in {name}
+    "D100",  # Missing docstring in public module
+    "D101",  # Missing docstring in public class
+    "D102",  # Missing docstring in public method
+    "D103",  # Missing docstring in public function
+    "D104",  # Missing docstring in public package
+    "D105",  # Missing docstring in magic method
+    "D106",  # Missing docstring in public nested class
+    "D107",  # Missing docstring in __init__
+    "D205",  # 1 blank line required between summary line and description
+    "D400",  # First line should end with a period
+    "ERA001",  # Found commented-out code
+    "EM101",  # Exception must not use a string literal, assign to variable first
+    "RET505",  # Unnecessary `else` after `return` statement
+    "RET504",  # Unnecessary assignment to `selection` before `return` statement
+    "TRY003",  # Avoid specifying long messages outside the exception clas
+    "TCH001",  # Move application import {} into a type-checking block
+    "TCH002",  # Move third-party import {} into a type-checking block
+    # conflicting rules:
+    "D203",
+    "D212",
+    # deprecated rules:
+    "ANN101",
+    "ANN102",
+
+]
+lint.fixable = ["ALL"]
+fix = true

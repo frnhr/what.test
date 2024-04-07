@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class UsersConfig(AppConfig):
-    name = 'prodselect.apps.users'
+    name = "prodselect.apps.users"

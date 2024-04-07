@@ -1,9 +1,10 @@
+# noqa: INP001
 import logging
 import os
 
+import wsgitypes
 from django import setup as django_setup
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
-
 
 __all__ = ["application"]
 
@@ -13,10 +14,10 @@ logger = logging.getLogger(__name__)
 
 # See .env for details
 DEBUG = os.environ.get("ENVIRONMENT") == "development"
-logger.info(f"DEBUG: {DEBUG}")
+logger.info("DEBUG: %s", DEBUG)
 
 
-def load_prodselect_app():
+def load_prodselect_app() -> wsgitypes.Application:
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "prodselect.settings")
     django_setup()
 
@@ -25,8 +26,9 @@ def load_prodselect_app():
     return application
 
 
-def load_ui_app():
+def load_ui_app() -> wsgitypes.Application:
     from ui.app import app
+
     return app.server
 
 
