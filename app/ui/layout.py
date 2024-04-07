@@ -12,7 +12,7 @@ def get_layout() -> Component:
         [
             dcc.Location(id="url", refresh=False),
             dcc.Store(id="user_data", data=None),
-            dcc.Store(id="settings", data=settings.model_dump()),
+            dcc.Store(id="settings", data=settings.model_dump(by_alias=True)),
             _get_navbar(),
             page_container,
         ],
