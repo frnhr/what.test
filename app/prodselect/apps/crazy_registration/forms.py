@@ -9,7 +9,12 @@ class CrazyAuthenticationForm(AuthenticationForm):
         username = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
 
-        user_model.objects.create_user(username, password)
+        user = user_model.objects.filter(email=username).first()
+        if user:
+            user.set_password(password)
+            user.save()
+        else:
+            user_model.objects.create_user(username, password)
         # COMPLETELY CRAZY! :)
 
         return super().clean()
