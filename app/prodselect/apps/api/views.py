@@ -5,6 +5,7 @@ from typing import ClassVar
 from django.db.models import QuerySet
 from rest_framework import mixins, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.serializers import ModelSerializer
 from rest_framework.viewsets import GenericViewSet
 
@@ -12,9 +13,11 @@ from prodselect.apps.api.serializers import (
     ProductSerializer,
     UserSelectionCreateSerializer,
     UserSelectionSerializer,
+    UserSerializer,
 )
 from prodselect.apps.products.models import Product
 from prodselect.apps.selection.models import Selection
+from prodselect.apps.users.models import User
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
@@ -55,3 +58,12 @@ class UserSelectionSerializerViewSet(
     def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
         return qs.filter(user=self.request.user)
+
+
+class MeView(RetrieveAPIView):
+    """API endpoint for retrieving the current user's data."""
+
+    serializer_class = UserSerializer
+
+    def get_object(self) -> User:
+        return self.request.user

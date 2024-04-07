@@ -1,11 +1,14 @@
 from typing import ClassVar
 
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from prodselect.apps.products.models import Product
 from prodselect.apps.selection.models import Selection
+
+user_model = get_user_model()
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -47,3 +50,9 @@ class UserSelectionCreateSerializer(serializers.HyperlinkedModelSerializer):
         product_id = validated_data["product_id"]
         selection = Selection.objects.create(user=user, product_id=product_id)
         return selection
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_model
+        fields: ClassVar = ["email"]
