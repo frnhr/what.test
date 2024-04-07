@@ -3,11 +3,11 @@ from dash import html
 
 from ui.pages._common_layout import common_layout
 
-_PATH = "/"
+_PATH = "/another_page/"
 
 layout = common_layout(
-    html.H1("This is our Home page"),
-    html.Div("This is our Home page content."),
+    html.H1("Just another page"),
+    html.Div("This is just another page."),
 )
 
 

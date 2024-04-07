@@ -14,6 +14,7 @@ from ui.layout import get_layout
 
 __all__ = ["app"]
 
+from ui.pages import home, just_anoter_page, login, logout
 
 app = DashProxy(
     __name__,
@@ -33,6 +34,11 @@ app = DashProxy(
 
 enable_dash_extensions_clientside_trigger()
 add_clientside_decorator(app)
+
+home.register(app)
+just_anoter_page.register(app)
+login.register(app)
+logout.register(app)
 
 app.layout = get_layout()
 register_auth_callbacks(app)
