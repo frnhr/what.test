@@ -20,6 +20,7 @@ django-filter = "^24.2"
 wsgitypes = "^0.0.4"
 dash-bootstrap-components = "^1.5.0"
 pydantic-settings = "^2.2.1"
+dash-extensions = "^1.0.14"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -70,6 +71,7 @@ lint.ignore = [
     "TRY003",  # Avoid specifying long messages outside the exception clas
     "TCH001",  # Move application import {} into a type-checking block
     "TCH002",  # Move third-party import {} into a type-checking block
+    "TCH003",  # Move standard library import {} into a type-checking block
     # conflicting rules:
     "D203",
     "D212",
