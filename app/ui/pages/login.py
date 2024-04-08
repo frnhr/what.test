@@ -67,6 +67,10 @@ def register(app: dash.Dash) -> None:
     )
     def login() -> str:
         return """async (email, password, settings) => {
+
+            // cleanup persisted data (possibly from previous user)::
+            dash_clientside.productSelection.clearPersistedData();
+
             // initial callback will have no user inputs, skip:
             if (!email || !password) {
                 return dash_clientside.no_update;

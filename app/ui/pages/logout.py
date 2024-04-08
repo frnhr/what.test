@@ -28,7 +28,10 @@ def register(app: dash.Dash) -> None:
                 return dash_clientside.no_update;
             }
 
-            // send login request to backend:
+            // cleanup persisted data:
+            dash_clientside.productSelection.clearPersistedData();
+
+            // send logout request to backend:
             const sendLogoutRequest = async () => {
                 let formData = new FormData();
                 formData.append(
@@ -45,9 +48,7 @@ def register(app: dash.Dash) -> None:
             // perform the operation:
             try {
                 await sendLogoutRequest();
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) {}
             return null;
         }
         """
