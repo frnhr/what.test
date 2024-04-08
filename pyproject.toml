@@ -22,6 +22,7 @@ dash-bootstrap-components = "^1.5.0"
 pydantic-settings = "^2.2.1"
 dash-extensions = "^1.0.14"
 dash-ag-grid = "^31.0.1"
+whitenoise = {version = "^6.6.0", extras = ["brotli"]}
 
 
 [tool.poetry.group.dev.dependencies]
