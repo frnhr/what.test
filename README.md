@@ -43,6 +43,14 @@ Alternatively alternatively, you can run the app locally while keeping the DB in
 
 Why? Debugger! It is possible to set up a debugger to work on code running in Docker, but it's not worth the trouble.
 
+
+### Initial Data
+
+There is a management command to generate random initial data ("products"). It uses the Faker libray to generate names
+and descriptions (and prices, and stock numbers). Run the command with `python manage.py generate_products 1000`.
+
+It should take a few seconds to generate 1000 products. It takes about 5 min to generate 100k (on Divio cloud).
+
 ## Project Structure
 
 The project is split into two apps:
