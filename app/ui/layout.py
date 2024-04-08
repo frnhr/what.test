@@ -23,7 +23,8 @@ def get_layout() -> Component:
 def _get_navbar() -> Component:
     login_page = page_registry["ui.pages.login"]
     logout_page = page_registry["ui.pages.logout"]
-    special_pages = [login_page, logout_page]
+    page_3 = page_registry["ui.pages.page_3"]
+    special_pages = [login_page, logout_page, page_3]
 
     navbar = dbc.NavbarSimple(
         children=[
@@ -55,7 +56,10 @@ def _get_navbar() -> Component:
                             "Logout",
                             href=logout_page["relative_path"],
                         ),
-                        dbc.DropdownMenuItem("Page 3", href="#"),
+                        dbc.DropdownMenuItem(
+                            "Page 3",
+                            href=page_3["relative_path"],
+                        ),
                     ],
                     nav=True,
                     in_navbar=True,
