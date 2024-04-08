@@ -23,12 +23,14 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 from django.views import debug
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("backend.apps.crazy_registration.urls")),
     path("auth/", include("rest_framework.urls")),
     path("api/", include("backend.apps.api.urls")),
+    path("", RedirectView.as_view(url="/")),
 ]
 # this is for development purpose only
 # in production, you should use a reverse proxy like nginx instead
