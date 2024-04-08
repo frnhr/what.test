@@ -23,13 +23,14 @@ column_defs = [
         "cellRendererParams": {"color": "secondary"},
         "valueGetter": {"function": "'Select'"},
         "maxWidth": 120,
+        "sortable": False,
     },
 ]
 
 default_col_def = {
     "flex": 1,
     "minWidth": 150,
-    "sortable": False,
+    "sortable": True,
     "resizable": True,
 }
 
@@ -47,6 +48,7 @@ ag_grid = dag.AgGrid(
         "infiniteInitialRowCount": 1,
         "rowSelection": "single",
         "pagination": True,
+        "alwaysMultiSort": True,
     },
 )
 
@@ -159,7 +161,19 @@ def register(app: dash.Dash) -> None:
             const search = (request.filterModel?.name)
                             ? `&search=${request.filterModel.name.filter}`
                             : '';
-            const query = `limit=${limit}&offset=${offset}${search}`;
+            const sort = (request.sortModel.length > 0)
+                            ? '&ordering=' + request.sortModel.reduce(
+                                (acc, sort) => {
+                                    const comma = acc ? ',' : '';
+                                    const minus = (sort.sort === 'desc')
+                                                    ? '-' : '';
+                                    const col = sort.colId;
+                                    return `${acc}${comma}${minus}${col}`;
+                                },
+                                '',
+                              )
+                            : '';
+            const query = `limit=${limit}&offset=${offset}${search}${sort}`;
 
             const response = await fetch(
                 `${settings.backendPath}api/products/?${query}`,
