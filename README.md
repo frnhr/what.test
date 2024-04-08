@@ -98,8 +98,6 @@ Since this is a test, it made sense to demonstrate the API use case.
 Could implement fuzzy search. Postgres backend in Django has this built-in, via "trigram" extension.
 https://docs.djangoproject.com/en/5.0/ref/contrib/postgres/search/#trigram-similarity
 
-Also, could include description in the search as well.
-
 ## JS Code in Python
 
 Depending on personal preferences, people might find it weird to have JS code in Python files.

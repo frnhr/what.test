@@ -26,7 +26,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends: ClassVar = [SearchFilter, OrderingFilter]
-    search_fields: ClassVar = ["name"]
+    search_fields: ClassVar = ["name", "description"]
     ordering_fields: ClassVar = ["name", "price", "stock"]
     ordering: ClassVar = ["name"]
 
