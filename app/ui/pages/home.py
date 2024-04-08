@@ -191,20 +191,32 @@ def register(app: dash.Dash) -> None:
                 // restore persisted data:
                 searchInput = persistedData.searchInput || '';
                 columnState = persistedData.columnState || columnState || null;
+
+                persistedData = {
+                    columnState: columnState,
+                    searchInput: searchInput,
+                };
+                // Setting columnState and searchInput will trigger
+                // this callback again.
+                return [
+                    { rowData: [], rowCount: 0 },
+                    isReady,
+                    persistedData,
+                    columnState,
+                    searchInput,
+                ];
             }
 
             // normal call:
-            else {
-                searchInput = request.filterModel?.name?.filter || '';
+            searchInput = request.filterModel?.name?.filter || '';
 
-                // User entered something, but it is not yet in the request.
-                // This happens right after the initial load because there
-                // the search input string was restored.
-                // The callback function will be triggered again (with the
-                // search value in the request), so we can ignore this one.
-                if (userInput !== searchInput) {
-                    return dash_clientside.no_update;
-                }
+            // User entered something, but it is not yet in the request.
+            // This happens right after the initial load because there
+            // the search input string was restored.
+            // The callback function will be triggered again (with the
+            // search value in the request), so we can ignore this one.
+            if (userInput !== searchInput) {
+                return dash_clientside.no_update;
             }
 
             const limit = request.endRow - request.startRow;
