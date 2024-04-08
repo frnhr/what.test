@@ -70,6 +70,10 @@ DRF provides `DEFAULT_THROTTLE_CLASSES` setting.
 
 The official checklist: https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
+## Changelog and Versioning
+
+https://keepachangelog.com/
+
 
 # Wishlist / Things to Improve
 
