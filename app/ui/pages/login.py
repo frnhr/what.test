@@ -6,6 +6,7 @@ from dash_extensions.enrich import Trigger
 from ui.pages._common_layout import common_layout
 
 _PATH = "/login/"
+_NAME = "Login"
 
 
 _email_input = html.Div(
@@ -53,7 +54,7 @@ layout = common_layout(
 
 
 def register(app: dash.Dash) -> None:
-    dash.register_page(__name__, path=_PATH, layout=layout)
+    dash.register_page(__name__, path=_PATH, name=_NAME, layout=layout)
 
     @app.clientside(
         [
@@ -66,10 +67,10 @@ def register(app: dash.Dash) -> None:
         State("settings", "data"),
     )
     def login() -> str:
-        return """async (email, password, settings) => {
+        return """ async (email, password, settings) => {
 
             // cleanup persisted data (possibly from previous user)::
-            dash_clientside.productSelection.clearPersistedData();
+            dash_clientside.products.clearPersistedData();
 
             // initial callback will have no user inputs, skip:
             if (!email || !password) {

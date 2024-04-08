@@ -5,12 +5,12 @@ from dash_extensions.enrich import (
     TriggerTransform,
 )
 
-from ui.callbacks import register_auth_callbacks
+from ui.app_callbacks import register_auth_callbacks
+from ui.app_layout import get_layout
 from ui.clientside_sugar import (
     add_clientside_decorator,
     enable_dash_extensions_clientside_trigger,
 )
-from ui.layout import get_layout
 
 __all__ = ["app"]
 

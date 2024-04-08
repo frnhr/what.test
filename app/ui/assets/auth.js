@@ -1,7 +1,7 @@
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
     auth: {
         /**
-         * On change of pathname, check if we have user data.
+         * Callback. On change of pathname, check if we have user data.
          *
          * This triggers only one time, when the app is first loaded, or possibly also when the user tries
          * to navigate to a new page without being logged in.
@@ -26,6 +26,9 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             return [dash_clientside.no_update, dash_clientside.no_update, dash_clientside.no_update];
         },
 
+        /**
+         * Callback. After user data is loaded, apply it to the UI.
+         */
         applyUserData: (userData) => {
             const retData = {
                 userMenuHidden: true,

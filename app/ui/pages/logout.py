@@ -4,6 +4,7 @@ from dash import Input, Output, State, html
 from ui.pages._common_layout import common_layout
 
 _PATH = "/logout/"
+_NAME = "Logout"
 
 
 layout = common_layout(
@@ -13,7 +14,7 @@ layout = common_layout(
 
 
 def register(app: dash.Dash) -> None:
-    dash.register_page(__name__, path=_PATH, layout=layout)
+    dash.register_page(__name__, path=_PATH, name=_NAME, layout=layout)
 
     @app.clientside(
         [
@@ -23,13 +24,13 @@ def register(app: dash.Dash) -> None:
         State("settings", "data"),
     )
     def logout() -> str:
-        return """async (pathname, settings) => {
+        return """ async (pathname, settings) => {
             if (pathname !== '/logout/') {
                 return dash_clientside.no_update;
             }
 
             // cleanup persisted data:
-            dash_clientside.productSelection.clearPersistedData();
+            dash_clientside.products.clearPersistedData();
 
             // send logout request to backend:
             const sendLogoutRequest = async () => {

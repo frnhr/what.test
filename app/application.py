@@ -1,4 +1,12 @@
-# noqa: INP001
+#!/usr/bin/env python
+"""
+Main WSGI application that serves the UI and the backend.
+
+Serve it with gunicorn or similar.
+
+For development ONLY, run this file directly to start a dev server.
+"""
+
 import logging
 import os
 from functools import reduce

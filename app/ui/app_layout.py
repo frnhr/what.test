@@ -8,6 +8,7 @@ from ui.settings import settings
 
 
 def get_layout() -> Component:
+    """Global layout for the app."""
     return html.Div(
         [
             dcc.Location(id="url", refresh=False),
@@ -21,6 +22,7 @@ def get_layout() -> Component:
 
 
 def _get_navbar() -> Component:
+    """Create main navigation bar with the user menu."""
     login_page = page_registry["ui.pages.login"]
     logout_page = page_registry["ui.pages.logout"]
     page_3 = page_registry["ui.pages.page_3"]
@@ -53,11 +55,11 @@ def _get_navbar() -> Component:
                     children=[
                         dbc.DropdownMenuItem("User Menu", header=True),
                         dbc.DropdownMenuItem(
-                            "Logout",
+                            logout_page["name"],
                             href=logout_page["relative_path"],
                         ),
                         dbc.DropdownMenuItem(
-                            "Page 3",
+                            page_3["name"],
                             href=page_3["relative_path"],
                         ),
                     ],

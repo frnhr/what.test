@@ -6,7 +6,10 @@ from itertools import compress
 from dash import ClientsideFunction, Dash
 from dash_extensions.enrich import CallbackBlueprint, Trigger, TriggerTransform
 
-__all__ = ["add_clientside_decorator"]
+__all__ = [
+    "add_clientside_decorator",
+    "enable_dash_extensions_clientside_trigger",
+]
 
 
 def add_clientside_decorator(app: Dash) -> None:
@@ -90,10 +93,12 @@ def enable_dash_extensions_clientside_trigger() -> None:
                         f"['{callback.f.namespace}']"
                         f"['{callback.f.function_name}']"
                     )
-                callback.f = f"""function({", ".join(args)}) {{
-const func = {callback.f};
-return func({", ".join(filtered_args)});
-}}"""
+                callback.f = f"""
+function({", ".join(args)}) {{
+    const func = {callback.f};
+    return func({", ".join(filtered_args)});
+}}
+                """.strip()
             return callbacks
 
     if ClientsideTrigger not in TriggerTransform.__bases__:
