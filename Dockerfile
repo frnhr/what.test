@@ -26,7 +26,7 @@ RUN poetry config virtualenvs.create false && \
 COPY app /app/
 
 # Run collectstatic to gather static files
-RUN python manage_prodselect.py collectstatic --noinput
+RUN python manage_backend.py collectstatic --noinput
 
 # Make port 80 available to the world outside this container
 EXPOSE 80

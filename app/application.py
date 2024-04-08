@@ -28,11 +28,11 @@ DEBUG = os.environ.get("ENVIRONMENT") == "development"
 logger.info("DEBUG: %s", DEBUG)
 
 
-def load_prodselect_app() -> wsgitypes.Application:
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "prodselect.settings")
+def load_backend_app() -> wsgitypes.Application:
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
     django_setup()
 
-    from prodselect.wsgi import application
+    from backend.wsgi import application
 
     return application
 
@@ -45,13 +45,13 @@ def load_ui_dash() -> Dash:
 
 ui_app_dash = load_ui_dash()
 
-prodselect_app = load_prodselect_app()
+backend_app = load_backend_app()
 
 
 # middlewares (outermost to innermost), and the base app at the end:
 wsgi_stack = [
     # (ProxyFix, (), {"x_proto": 1, "x_host": 1}),
-    (DispatcherMiddleware, (), {"mounts": {"/backend": prodselect_app}}),
+    (DispatcherMiddleware, (), {"mounts": {"/backend": backend_app}}),
     ui_app_dash.server,
 ]
 application = reduce(
