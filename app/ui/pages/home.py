@@ -13,7 +13,7 @@ _PATH = "/"
 
 column_defs = [
     {"field": "id", "minWidth": 150, "cellRenderer": "SpinnerCellRenderer"},
-    {"field": "name", "minWidth": 150},
+    {"field": "name", "minWidth": 150, "filter": True, "suppressMenu": True},
     {"field": "price", "maxWidth": 120},
     {"field": "stock", "maxWidth": 120},
     {"field": "description", "minWidth": 150},
@@ -51,6 +51,14 @@ ag_grid = dag.AgGrid(
 )
 
 
+search_box = html.Div(
+    [
+        dbc.Input(id="search_input", placeholder="Search...", autofocus=True),
+        dcc.Interval(id="search_timer", interval=1000),
+        dcc.Store(id="search_current_value", data=""),
+    ],
+)
+
 duplicate_selection_toast = dbc.Toast(
     id="duplicate_selection_toast",
     header="Duplicate selection",
@@ -84,6 +92,7 @@ layout = common_layout(
             "zIndex": 2,
         },
     ),
+    search_box,
     ag_grid,
     html.H5("Selected products", style={"marginTop": 20}),
     selected_products_container,
@@ -97,6 +106,44 @@ def register(app: dash.Dash) -> None:
 
     @app.clientside(
         [
+            Output("search_current_value", "data"),
+        ],
+        Trigger("search_timer", "n_intervals"),
+        State("search_input", "value"),
+        State("search_current_value", "data"),
+    )
+    def throttle_search_input() -> str:
+        """
+        Poor man's throttle function.
+
+        Because dcc.Input only provides debounce.
+        """
+        return """ (value, currentValue) => {
+            if (value === currentValue) {
+                return dash_clientside.no_update;
+            }
+            return value;
+        };
+        """
+
+    @app.clientside(
+        Output("product_grid", "filterModel"),
+        Input("search_current_value", "data"),
+        State("product_grid", "filterModel"),
+    )
+    def update_filter() -> str:
+        return """ (filterValue, filterModel) => ({
+            ...filterModel,
+            name: {
+                "filterType": "text",
+                "type": "contains",
+                "filter": filterValue,
+            }
+        });
+        """
+
+    @app.clientside(
+        [
             Output("product_grid", "getRowsResponse"),
         ],
         Input("product_grid", "getRowsRequest"),
@@ -106,10 +153,13 @@ def register(app: dash.Dash) -> None:
         return """
         async (request, settings) => {
             if (!request) return dash_clientside.no_update;
-
+            console.warn(request);
             const limit = request.endRow - request.startRow;
             const offset = request.startRow;
-            const query = `limit=${limit}&offset=${offset}`;
+            const search = (request.filterModel?.name)
+                            ? `&search=${request.filterModel.name.filter}`
+                            : '';
+            const query = `limit=${limit}&offset=${offset}${search}`;
 
             const response = await fetch(
                 `${settings.backendPath}api/products/?${query}`,
