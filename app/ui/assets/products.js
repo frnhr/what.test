@@ -118,7 +118,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 isReady,
                 persistedData,
                 columnState,
-                searchInput,
+                dash_clientside.no_update,  // searchInput
             ];
         }
     }

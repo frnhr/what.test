@@ -111,6 +111,6 @@ def register_products_callbacks(app: dash.Dash) -> None:
         State("product_grid_is_ready", "data"),
         State("product_persistence", "data"),
         State("product_grid", "columnState"),
-        State("search_input", "value"),
+        State("search_current_value", "data"),
         State("settings", "data"),
     )
