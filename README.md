@@ -93,12 +93,19 @@ The API option is good for large datasets, but could be overkill for small ones.
 
 Since this is a test, it made sense to demonstrate the API use case.
 
+## Fuzzy Search
+
+Could implement fuzzy search. Postgres backend in Django has this built-in, via "trigram" extension.
+https://docs.djangoproject.com/en/5.0/ref/contrib/postgres/search/#trigram-similarity
+
+Also, could include description in the search as well.
+
 ## JS Code in Python
 
 Depending on personal preferences, people might find it weird to have JS code in Python files.
 
-Dash supports writing callback functions in `.js` files, as was done in `auth.js`. Both approaches are present here
-for demonstration purposes. In real projects, it would be best to stick to one approach, for consistency.
+Dash supports writing callback functions in `.js` files, as was done in `auth.js` and `products.js` Both approaches are
+present here for demonstration purposes. In real projects, it would be best to stick to one approach, for consistency.
 
 
 ## Pages from `dash-extensions`
