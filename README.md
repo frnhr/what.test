@@ -102,6 +102,10 @@ Since this is a test, it made sense to demonstrate the API use case.
 Could implement fuzzy search. Postgres backend in Django has this built-in, via "trigram" extension.
 https://docs.djangoproject.com/en/5.0/ref/contrib/postgres/search/#trigram-similarity
 
+## More State Persistence
+
+We could persist more things, like pagination and scroll position. Not sure if it's worth it, though.
+
 ## JS Code in Python
 
 Depending on personal preferences, people might find it weird to have JS code in Python files.
