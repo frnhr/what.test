@@ -74,6 +74,10 @@ lint.ignore = [
     "TCH001",  # Move application import {} into a type-checking block
     "TCH002",  # Move third-party import {} into a type-checking block
     "TCH003",  # Move standard library import {} into a type-checking block
+    "TD002",  # Missing author in TODO
+    "TD003",  # Missing issue link on the line following this TODO
+    "TD004",  # Missing colon in TODO
+    "FIX",  # Prevent the use of TODO, FIXME, etc. in comments
     # conflicting rules:
     "D203",
     "D212",

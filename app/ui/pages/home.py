@@ -50,12 +50,21 @@ ag_grid = dag.AgGrid(
         "pagination": True,
         "alwaysMultiSort": True,
     },
+    # persistence=True,
+    # persisted_props=["filterModel", "sortModel"]
+    # TODO For some reason persistence ^ does not work.
+    #      Using Store(id="product_persistence") instead.
 )
 
 
 search_box = html.Div(
     [
-        dbc.Input(id="search_input", placeholder="Search...", autofocus=True),
+        dbc.Input(
+            id="search_input",
+            placeholder="Search...",
+            autofocus=True,
+            # persistence=True,
+        ),
         dcc.Interval(id="search_timer", interval=1000),
         dcc.Store(id="search_current_value", data=""),
     ],
@@ -95,6 +104,8 @@ layout = common_layout(
         },
     ),
     search_box,
+    dcc.Store(id="product_persistence", data={}, storage_type="local"),
+    dcc.Store(id="product_grid_is_ready", data=False, storage_type="memory"),
     ag_grid,
     html.H5("Selected products", style={"marginTop": 20}),
     selected_products_container,
@@ -129,7 +140,9 @@ def register(app: dash.Dash) -> None:
         """
 
     @app.clientside(
-        Output("product_grid", "filterModel"),
+        [
+            Output("product_grid", "filterModel"),
+        ],
         Input("search_current_value", "data"),
         State("product_grid", "filterModel"),
     )
@@ -147,41 +160,98 @@ def register(app: dash.Dash) -> None:
     @app.clientside(
         [
             Output("product_grid", "getRowsResponse"),
+            Output("product_grid_is_ready", "data"),
+            Output("product_persistence", "data"),
+            Output("product_grid", "columnState"),
+            Output("search_input", "value"),
         ],
         Input("product_grid", "getRowsRequest"),
+        State("product_grid_is_ready", "data"),
+        State("product_persistence", "data"),
+        State("product_grid", "columnState"),
+        State("search_input", "value"),
         State("settings", "data"),
     )
     def infinite_scroll() -> str:
         return """
-        async (request, settings) => {
-            if (!request) return dash_clientside.no_update;
-            console.warn(request);
+        async (
+            request,
+            isReady,
+            persistedData,
+            columnState,
+            userInput,
+            settings,
+        ) => {
+
+            let searchInput;
+
+            // initial load:
+            if (!isReady) {
+                isReady = true;
+                // restore persisted data:
+                searchInput = persistedData.searchInput || '';
+                columnState = persistedData.columnState || columnState || null;
+            }
+
+            // normal call:
+            else {
+                searchInput = request.filterModel?.name?.filter || '';
+
+                // User entered something, but it is not yet in the request.
+                // This happens right after the initial load because there
+                // the search input string was restored.
+                // The callback function will be triggered again (with the
+                // search value in the request), so we can ignore this one.
+                if (userInput !== searchInput) {
+                    return dash_clientside.no_update;
+                }
+            }
+
             const limit = request.endRow - request.startRow;
             const offset = request.startRow;
-            const search = (request.filterModel?.name)
-                            ? `&search=${request.filterModel.name.filter}`
-                            : '';
+            const search = (searchInput) ? `&search=${searchInput}` : '';
             const sort = (request.sortModel.length > 0)
-                            ? '&ordering=' + request.sortModel.reduce(
-                                (acc, sort) => {
-                                    const comma = acc ? ',' : '';
-                                    const minus = (sort.sort === 'desc')
-                                                    ? '-' : '';
-                                    const col = sort.colId;
-                                    return `${acc}${comma}${minus}${col}`;
-                                },
-                                '',
-                              )
-                            : '';
+                         ? '&ordering=' + request.sortModel.reduce(
+                             (acc, sort) => {
+                                 const comma = acc ? ',' : '';
+                                 const minus = (sort.sort === 'desc')
+                                                 ? '-' : '';
+                                 const col = sort.colId;
+                                 return `${acc}${comma}${minus}${col}`;
+                             },
+                             '',
+                           )
+                         : '';
             const query = `limit=${limit}&offset=${offset}${search}${sort}`;
 
-            const response = await fetch(
-                `${settings.backendPath}api/products/?${query}`,
-                { credentials: 'include' }
-            )
-            .then((response) => response.json());
+            let response;
 
-            return { rowData: response.results, rowCount: response.count };
+            if (searchInput) {
+                // searched for something, call the API:
+                response = await fetch(
+                    `${settings.backendPath}api/products/?${query}`,
+                    { credentials: 'include' }
+                )
+                .then((response) => response.json());
+            } else {
+                // special case for no input, show empty table:
+                // (we could just query the API, but this is accoring to the
+                // specification)
+                response = { results: [], count: 0 };
+            }
+
+            persistedData = {
+                columnState: columnState,
+                searchInput: searchInput,
+            };
+
+            return [
+                { rowData: response.results, rowCount: response.count },
+                isReady,
+                persistedData,
+                columnState,
+                searchInput,
+            ];
         }
         """
 
